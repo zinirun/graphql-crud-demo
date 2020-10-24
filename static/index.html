@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    GraphQL Example
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        axios.get('http://localhost:3000/graphql', {
+            params: {
+                query: "{getProduct( id : 1 ) {price name description}}"
+            }
+        }).then((result)=>{
+            console.log(result);
+        });
+
+        axios.post('http://localhost:3000/graphql',{
+    "query": "mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }",
+    "variables": { "input" : { "name" : "세번째상품" , "price" : 3000 , "description" : "후후후" } }
+}).then((result)=>{console.log(result)});
+    </script>
+</body>
+</html>
