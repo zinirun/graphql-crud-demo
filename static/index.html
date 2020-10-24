@@ -18,9 +18,9 @@
         });
 
         axios.post('http://localhost:3000/graphql',{
-    "query": "mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }",
-    "variables": { "input" : { "name" : "세번째상품" , "price" : 3000 , "description" : "후후후" } }
-}).then((result)=>{console.log(result)});
+            "query": "mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }",
+            "variables": { "input" : { "name" : "세번째상품" , "price" : 3000 , "description" : "후후후" } }
+        }).then((result)=>{console.log(result)});
     </script>
 </body>
 </html>
