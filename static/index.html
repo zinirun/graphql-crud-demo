@@ -1,26 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Amazing GraphQL</title>
 </head>
 <body>
-    GraphQL Example
+    <h2>GraphQL Example With Axios</h2>
+    <div>
+        <details>
+            <summary style="
+                font-weight: 600;
+                color: dodgerblue;
+            ">
+                All Products
+            </summary>
+            <ul>
+
+            </ul>
+            </div>
+        </details>
+    </div><hr />
+    <!--GET-->
+    <p>
+        <h3>GET</h3>
+        Product Id <input id="pid" /> <button id="get">GET</button>
+    </p>
+    <div id="result" style="display: none">
+        <h4>Result</h4>
+        <p>
+            price <input id="price" />
+        </p>
+        <p>
+            name <input id="name" />
+        </p>
+        <p>
+            description <input id="description" />
+        </p>
+    </div><hr />
+    <!--POST-->
+    <p>
+        <h3>POST (without form)</h3>
+    </p>
+    <div>
+        <p>
+            price <input id="priceInput" />
+        </p>
+        <p>
+            name <input id="nameInput" />
+        </p>
+        <p>
+            description <input id="descriptionInput" />
+        </p>
+        <button id="post">POST</button>
+    </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        axios.get('http://localhost:3000/graphql', {
-            params: {
-                query: "{getProduct( id : 1 ) {price name description}}"
-            }
-        }).then((result)=>{
-            console.log(result);
-        });
+        // GET (All product)
 
-        axios.post('http://localhost:3000/graphql',{
-            "query": "mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }",
-            "variables": { "input" : { "name" : "세번째상품" , "price" : 3000 , "description" : "후후후" } }
-        }).then((result)=>{console.log(result)});
+
+        // GET (One product)
+        const pid = document.querySelector('#pid');
+        const result = document.querySelector('#result');
+        const price = document.querySelector('#price');        const name = document.querySelector('#name');        const description = document.querySelector('#description');
+        const getBt = document.querySelector('#get');
+        getBt.addEventListener('click', getProduct);
+
+        // POST
+        const priceInput = document.querySelector('#priceInput');
+        const nameInput = document.querySelector('#nameInput');
+        const descriptionInput = document.querySelector('#descriptionInput');
+        const postBt = document.querySelector('#post');
+        postBt.addEventListener('click', postProduct);
+
+        function getProduct(){
+            axios.get('http://localhost:3000/graphql', {
+                params: {
+                    query: `{getProduct(id : ${pid.value}) {price name description}}`
+                }
+            })
+            .then((result)=>{
+                displayResult(result.data.data.getProduct);
+            })
+            .catch((err)=>{
+                result.style.display = 'none';
+                alert('No Result');
+                console.log(err);
+            });
+        }
+
+        function displayResult(values){
+            price.value = values.price;
+            name.value = values.name;
+            description.value = values.description;
+            result.style.display = 'block';
+        }
+
+        function getAllProducts(){
+            axios.get('http://localhost:3000/graphql', {
+                params: {
+                    query: `{getProduct() {[Product]}}`
+                }
+            })
+            .then((result)=>{
+                console.log(result);
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+        }
+
+        getAllProducts();
+
+        function postProduct(){
+            axios.post('http://localhost:3000/graphql',{
+                query: "mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }",
+                variables: {
+                    input: {
+                        price: parseInt(priceInput.value),
+                        name: String(nameInput.value),
+                        description: String(descriptionInput.value)
+                    }
+                },
+                operationName: null,
+            })
+            .then((result)=>{alert(`Added successfully at id ${result.data.data.addProduct.id}`);})
+            .catch((err)=>{console.log(err)});
+        }
     </script>
 </body>
 </html>
