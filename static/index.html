@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik:300|Roboto:300"/>
     <title>Amazing GraphQL</title>
 </head>
 <body>
-    <h2>GraphQL Example With Axios</h2>
-    <div>
-        <details>
-            <summary style="
-                font-weight: 600;
-                color: dodgerblue;
-            ">
-                All Products
-            </summary>
-            <ul>
-
-            </ul>
-            </div>
-        </details>
-    </div><hr />
+    <h2>
+        <img src="https://graphql.org/img/logo.svg" width="35px"/>
+        <span style="
+            font-family: 'Rubik', 'Helvetica', sans-serif;
+            color: #E10098;
+        ">GraphQL Example With Axios</span>
+    </h2>
+    <h3 style="color: dodgerblue;">
+        All Products
+    </h3>
+    <ul id="allProducts">
+    </ul><hr />
     <!--GET-->
     <p>
         <h3>GET</h3>
@@ -56,8 +54,9 @@
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        // GET (All product)
-
+        // GET (All products)
+        const allProducts = document.querySelector('#allProducts');
+        getAllProducts(); // when window loaded
 
         // GET (One product)
         const pid = document.querySelector('#pid');
@@ -73,6 +72,7 @@
         const postBt = document.querySelector('#post');
         postBt.addEventListener('click', postProduct);
 
+        // GET (One product)
         function getProduct(){
             axios.get('http://localhost:3000/graphql', {
                 params: {
@@ -96,22 +96,23 @@
             result.style.display = 'block';
         }
 
+        // GET (All products)
         function getAllProducts(){
             axios.get('http://localhost:3000/graphql', {
                 params: {
-                    query: `{getProduct() {[Product]}}`
+                    query: `{getProducts{id name price description}}`
                 }
             })
-            .then((result)=>{
-                console.log(result);
-            })
-            .catch((err)=>{
-                console.log(err);
+            .then(result => result.data.data.getProducts)
+            .catch(err => console.log(err))
+            .then(products => {
+                allProducts.innerHTML = products.map(p=>
+                `<li><b>id</b>: ${p.id} <b>name</b>: ${p.name} <b>price</b>: ${p.price} <b>description</b>: ${p.description} <button class="del" onclick="deleteProduct(this)" product-id="${p.id}">DEL</button>`
+                ).join('');
             });
         }
 
-        getAllProducts();
-
+        // POST
         function postProduct(){
             axios.post('http://localhost:3000/graphql',{
                 query: "mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }",
@@ -125,8 +126,22 @@
                 operationName: null,
             })
             .then((result)=>{alert(`Added successfully at id ${result.data.data.addProduct.id}`);})
-            .catch((err)=>{console.log(err)});
+            .catch((err)=>{console.log(err)})
+            .then(getAllProducts());
         }
+
+        // DELETE
+        function deleteProduct(e){
+            const id = parseInt(e.getAttribute('product-id'));
+            axios.post('http://localhost:3000/graphql',{
+                query: `mutation deleteProduct{ deleteProduct(id: ${id}) }`,
+                operationName: null,
+            })
+            .then((result)=>{alert(`Deleted successfully at id ${result.data.data.deleteProduct}`);})
+            .catch((err)=>{console.log(err)})
+            .then(getAllProducts());
+        }
+
     </script>
 </body>
 </html>
