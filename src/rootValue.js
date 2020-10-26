@@ -1,4 +1,5 @@
 const products = require('./products');
+const defaultProducts = require('./defaultProducts');
 
 module.exports = {
     getProduct: ({ id }) => {
@@ -14,7 +15,7 @@ module.exports = {
     addProduct: ({ input }) => {
         input.id = products.length === 0 ? 1 : products[products.length - 1].id + 1;
         products.push(input);
-        return rootValue.getProduct({ id: input.id });
+        return input.id;
     },
 
     updateProduct: ({ id, input }) => {
@@ -30,5 +31,11 @@ module.exports = {
         const index = products.findIndex((product) => product.id === parseInt(id));
         products.splice(index, 1);
         return id;
+    },
+
+    initProduct: () => {
+        products.splice(0, products.length);
+        products.push(...defaultProducts);
+        return products.length;
     },
 };

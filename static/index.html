@@ -131,7 +131,10 @@
                     <img src="https://graphql.org/img/logo.svg" width="40px" />
                 </h2>
                 <hr style="border-color: #e10098" />
-                <h4>All Products <span id="updated">Updated!</span></h4>
+                <h4>
+                    All Products <button id="set">Set Default</button>
+                    <span id="updated">Updated!</span>
+                </h4>
                 <ul id="allProducts"></ul>
                 <hr />
                 <!--GET-->
@@ -179,7 +182,7 @@
                     </form>
                     <div class="query">
                         mutation addProduct($input: ProductInput) {<br />&nbsp;&nbsp;&nbsp;&nbsp;addProduct(input:
-                        $input) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}
+                        $input)<br />}
                     </div>
                 </div>
                 <hr />

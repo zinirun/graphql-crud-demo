@@ -31,3 +31,7 @@ searchName.addEventListener('keyup', (e) => {
         searchProducts(e.target.value.toLowerCase());
     }, debouncingTime.value);
 });
+
+// INIT DATA
+const set = document.querySelector('#set');
+set.addEventListener('click', initProduct);

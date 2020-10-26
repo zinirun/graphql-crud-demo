@@ -1,4 +1,5 @@
-const apiUri = 'https://gql-crud.herokuapp.com/graphql'; // Source URL/graphql
+// const apiUri = 'https://gql-crud.herokuapp.com/graphql'; // Source URL/graphql
+const apiUri = 'http://localhost:3000/graphql'; // Local Test
 
 // GET (One product)
 function getProduct() {
@@ -54,7 +55,7 @@ function postProduct(e) {
     e.preventDefault();
     axios
         .post(apiUri, {
-            query: 'mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }',
+            query: 'mutation addProduct($input: ProductInput) { addProduct(input: $input)}',
             variables: {
                 input: {
                     price: parseInt(this.price.value),
@@ -65,7 +66,8 @@ function postProduct(e) {
             operationName: null,
         })
         .then((result) => {
-            alert(`Added successfully at id ${result.data.data.addProduct.id}`);
+            console.log(result);
+            alert(`Added successfully at id ${result.data.data.addProduct}`);
         })
         .catch((err) => {
             console.log(err);
@@ -135,5 +137,23 @@ function searchProducts(value) {
                         `<li><b>id</b>: ${p.id} <b>name</b>: ${p.name} <b>price</b>: ${p.price} <b>description</b>: ${p.description}`,
                 )
                 .join('');
+        });
+}
+
+// default dataset
+function initProduct() {
+    axios
+        .get(apiUri, {
+            params: {
+                query: 'mutation initProduct { initProduct }',
+                operationName: null,
+            },
+            operationName: null,
+        })
+        .then((result) => {
+            getAllProducts();
+        })
+        .catch((err) => {
+            console.log(err);
         });
 }
