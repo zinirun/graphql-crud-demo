@@ -143,14 +143,12 @@ function searchProducts(value) {
 // default dataset
 function initProduct() {
     axios
-        .get(apiUri, {
-            params: {
-                query: 'mutation initProduct { initProduct }',
-                operationName: null,
-            },
+        .post(apiUri, {
+            query: 'mutation initProduct { initProduct }',
             operationName: null,
         })
         .then((result) => {
+            alert('Data is set by default');
             getAllProducts();
         })
         .catch((err) => {
