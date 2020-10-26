@@ -12,12 +12,35 @@
             * {
                 font-family: 'Roboto', 'Helvetica', sans-serif;
             }
-            body {
-                padding: 10px 3.5%;
-                margin: 0;
+            .wrapper {
+                width: 750px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: center;
+            }
+            .wrapper > .content {
+                width: 750px !important;
+            }
+            .wrapper > iframe {
+                display: none;
+                margin-left: 8px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+            .wrapper > iframe.open {
+                display: block;
+            }
+            .content > a {
+                float: right;
+            }
+            h2 > button {
+                margin-left: 10px;
             }
             h2 > img {
                 float: right;
+            }
+            h4 {
+                margin-bottom: 0.4rem;
             }
             ul {
                 padding: 0;
@@ -33,6 +56,7 @@
                 background-color: rgb(235, 235, 235);
             }
             hr {
+                margin-top: 1rem;
                 border: 1px solid #ddd;
             }
             input {
@@ -68,8 +92,8 @@
                 opacity: 0;
             }
             span#updated.up {
-                animation: updatedGlitter 0.7s ease-out both;
-                -webkit-animation: updatedGlitter 0.7s ease-out both;
+                animation: updatedGlitter 0.8s ease-out both;
+                -webkit-animation: updatedGlitter 0.8s ease-out both;
             }
             @keyframes updatedGlitter {
                 50% {
@@ -86,230 +110,112 @@
             .flex > button {
                 margin-left: 5px;
             }
+            .with-code {
+                justify-content: space-between;
+            }
+            .flex > .query {
+                width: 19rem;
+                padding: 0.5rem;
+                font-family: 'Consolas', serif;
+                font-size: 0.8rem;
+                border-radius: 5px;
+                background: #eee;
+            }
         </style>
     </head>
     <body>
-        <h2 style="font-family: 'Rubik', 'Helvetica', sans-serif; color: #e10098">
-            GraphQL CRUD Example With Axios
-            <img src="https://graphql.org/img/logo.svg" width="40px" />
-        </h2>
-        <hr style="border-color: #e10098" />
-        <h4>All Products <span id="updated">Updated!</span></h4>
-        <ul id="allProducts"></ul>
-        <hr />
-        <!--GET-->
-        <div>
-            <h4>GET & UPDATE</h4>
-            <div class="flex">
-                <span>Product Id</span><input id="pid" /> <button id="get">GET</button>
+        <div class="wrapper">
+            <div class="content">
+                <h2 style="font-family: 'Rubik', 'Helvetica', sans-serif; color: #e10098">
+                    GraphQL CRUD Example
+                    <img src="https://graphql.org/img/logo.svg" width="40px" />
+                </h2>
+                <hr style="border-color: #e10098" />
+                <h4>All Products <span id="updated">Updated!</span></h4>
+                <ul id="allProducts"></ul>
+                <hr />
+                <!--GET-->
+                <div>
+                    <h4>GET & UPDATE</h4>
+                    <div class="flex with-code">
+                        <div class="flex">
+                            <span>Product Id</span><input id="pid" /> <button id="get">GET</button>
+                        </div>
+                        <div class="query">
+                            { getProduct(id : ?) {<br />&nbsp;&nbsp;&nbsp;&nbsp;id price name
+                            description} }
+                        </div>
+                    </div>
+                </div>
+                <div id="result" style="display: none">
+                    <div class="flex with-code">
+                        <div>
+                            <h4>Result</h4>
+                            <p class="flex"><span>price</span><input id="price" /></p>
+                            <p class="flex"><span>name</span><input id="name" /></p>
+                            <p class="flex"><span>description</span><input id="description" /></p>
+                        </div>
+                        <div class="query">
+                            mutation updateProduct($id: ID!, $input: ProductInput!){<br />&nbsp;&nbsp;&nbsp;&nbsp;updateProduct(id:
+                            $id, input: $input)<br />}
+                        </div>
+                    </div>
+                    <!--UPDATE-->
+                    <button id="update">UPDATE</button>
+                </div>
+                <hr />
+                <!--POST-->
+                <div>
+                    <h4>POST</h4>
+                </div>
+                <div class="flex with-code">
+                    <form>
+                        <p class="flex"><span>price</span><input name="price" required /></p>
+                        <p class="flex"><span>name</span><input name="name" required /></p>
+                        <p class="flex">
+                            <span>description</span><input name="description" required />
+                        </p>
+                        <button id="post">POST</button>
+                    </form>
+                    <div class="query">
+                        mutation addProduct($input: ProductInput) {<br />&nbsp;&nbsp;&nbsp;&nbsp;addProduct(input:
+                        $input) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}
+                    </div>
+                </div>
+                <hr />
+                <!--SEARCH-->
+                <div>
+                    <h4>
+                        GET - Debouncing Search with
+                        <input id="time" value="200" style="width: 2.7rem" /> ms
+                    </h4>
+                </div>
+                <div class="flex with-code">
+                    <p class="flex">
+                        <span>name</span><input id="searchName" /><button id="search">
+                            Search
+                        </button>
+                    </p>
+                    <div class="query">
+                        { searchProducts(name: "${value}") {<br />&nbsp;&nbsp;&nbsp;&nbsp;id price
+                        name description} }
+                    </div>
+                </div>
+                <ul id="results"></ul>
+                <hr />
+                <button id="openIframe">Open GraphiQL</button>
+                <a href="https://github.com/zinirun/graphql-crud-demo" target="_blank"
+                    ><img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Font_Awesome_5_brands_github.svg/232px-Font_Awesome_5_brands_github.svg.png"
+                        width="24px"
+                /></a>
             </div>
+            <iframe src="/graphql" width="800px;"></iframe>
         </div>
-        <div id="result" style="display: none">
-            <h4>Result</h4>
-            <p class="flex"><span>price</span><input id="price" /></p>
-            <p class="flex"><span>name</span><input id="name" /></p>
-            <p class="flex"><span>description</span><input id="description" /></p>
-            <!--UPDATE-->
-            <button id="update">UPDATE</button>
-        </div>
-        <hr />
-        <!--POST-->
-        <div>
-            <h4>POST</h4>
-        </div>
-        <form>
-            <p class="flex"><span>price</span><input name="price" required /></p>
-            <p class="flex"><span>name</span><input name="name" required /></p>
-            <p class="flex"><span>description</span><input name="description" required /></p>
-            <button id="post">POST</button>
-        </form>
-        <hr />
-        <!--GET(Debouncing)-->
-        <div>
-            <h4>
-                GET - Debouncing Search with
-                <input id="time" value="200" style="width: 2.7rem" /> ms
-            </h4>
-        </div>
-        <p class="flex">
-            <span>name</span><input id="searchName" /><button id="search">Search</button>
-        </p>
-        <ul id="results"></ul>
-        <hr />
 
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script>
-            // GET (All products)
-            const allProducts = document.querySelector('#allProducts');
-            const updated = document.querySelector('#updated');
-            getAllProducts(); // when window loaded
-
-            // GET (One product)
-            const pid = document.querySelector('#pid');
-            const result = document.querySelector('#result');
-            const price = document.querySelector('#price');
-            const name = document.querySelector('#name');
-            const description = document.querySelector('#description');
-            const getBt = document.querySelector('#get');
-            getBt.addEventListener('click', getProduct);
-
-            // POST
-            const postForm = document.querySelector('form');
-            postForm.addEventListener('submit', postProduct);
-
-            // UPDATE
-            const updateBt = document.querySelector('#update');
-            updateBt.addEventListener('click', updateProduct);
-
-            // SEARCH(GET)
-            const results = document.querySelector('#results');
-            const searchName = document.querySelector('#searchName');
-            const debouncingTime = document.querySelector('#time');
-            let timer;
-            searchName.addEventListener('keyup', (e) => {
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(() => {
-                    searchProducts(e.target.value.toLowerCase());
-                }, debouncingTime.value);
-            });
-
-            function searchProducts(value) {
-                axios
-                    .get('http://localhost:3000/graphql', {
-                        params: {
-                            query: `{searchProducts(name: "${value}") {id price name description}}`,
-                        },
-                    })
-                    .then((result) => result.data.data.searchProducts)
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                    .then((products) => {
-                        results.innerHTML = products
-                            .map(
-                                (p) =>
-                                    `<li><b>id</b>: ${p.id} <b>name</b>: ${p.name} <b>price</b>: ${p.price} <b>description</b>: ${p.description}`,
-                            )
-                            .join('');
-                    });
-            }
-
-            // GET (One product)
-            function getProduct() {
-                axios
-                    .get('http://localhost:3000/graphql', {
-                        params: {
-                            query: `{getProduct(id : ${pid.value}) {id price name description}}`,
-                        },
-                    })
-                    .then((result) => {
-                        displayResult(result.data.data.getProduct);
-                    })
-                    .catch((err) => {
-                        result.style.display = 'none';
-                        alert('No Result');
-                        console.log(err);
-                    });
-            }
-
-            function displayResult(values) {
-                price.value = values.price;
-                name.value = values.name;
-                description.value = values.description;
-                updateBt.setAttribute('product-id', values.id);
-                result.style.display = 'block';
-            }
-
-            // GET (All products)
-            function getAllProducts() {
-                axios
-                    .get('http://localhost:3000/graphql', {
-                        params: {
-                            query: `{getProducts{id name price description}}`,
-                        },
-                    })
-                    .then((result) => result.data.data.getProducts)
-                    .catch((err) => console.log(err))
-                    .then((products) => {
-                        allProducts.innerHTML = products
-                            .map(
-                                (p) =>
-                                    `<li><b>id</b>: ${p.id} <b>name</b>: ${p.name} <b>price</b>: ${p.price} <b>description</b>: ${p.description} <button class="del" onclick="deleteProduct(this)" product-id="${p.id}">DEL</button>`,
-                            )
-                            .join('');
-                        updated.classList.remove('up');
-                        void updated.offsetWidth;
-                        updated.classList.add('up');
-                    });
-            }
-
-            // POST
-            function postProduct(e) {
-                e.preventDefault();
-                axios
-                    .post('http://localhost:3000/graphql', {
-                        query:
-                            'mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }',
-                        variables: {
-                            input: {
-                                price: parseInt(this.price.value),
-                                name: String(this.name.value),
-                                description: String(this.description.value),
-                            },
-                        },
-                        operationName: null,
-                    })
-                    .then((result) => {
-                        alert(`Added successfully at id ${result.data.data.addProduct.id}`);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                    .then(getAllProducts());
-            }
-
-            // DELETE
-            function deleteProduct(e) {
-                const id = parseInt(e.getAttribute('product-id'));
-                axios
-                    .post('http://localhost:3000/graphql', {
-                        query: `mutation deleteProduct{ deleteProduct(id: ${id})}`,
-                        operationName: null,
-                    })
-                    .then((result) => {
-                        alert(`Deleted successfully at id ${result.data.data.deleteProduct}`);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                    .then(getAllProducts());
-            }
-
-            // UPDATE
-            function updateProduct(e) {
-                const id = parseInt(e.target.getAttribute('product-id'));
-                axios
-                    .post('http://localhost:3000/graphql', {
-                        query:
-                            'mutation updateProduct($id: ID!, $input: ProductInput!) { updateProduct(id: $id, input: $input)}',
-                        variables: {
-                            id,
-                            input: {
-                                price: parseInt(price.value),
-                                name: String(name.value),
-                                description: String(description.value),
-                            },
-                        },
-                        operationName: null,
-                    })
-                    .then((result) => {
-                        alert(`Updated successfully at id ${result.data.data.updateProduct}`);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                    .then(getAllProducts());
-            }
-        </script>
+        <script src="/mod.js" defer></script>
+        <script src="/graphiql.js" defer></script>
+        <script src="/crud.js"></script>
     </body>
 </html>
