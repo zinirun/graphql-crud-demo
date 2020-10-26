@@ -1,5 +1,5 @@
-// const apiUri = 'https://gql-crud.herokuapp.com/graphql'; // Source URL/graphql
-const apiUri = 'http://localhost:3000/graphql'; // Local Test
+const apiUri = 'https://gql-crud.herokuapp.com/graphql'; // Source URL/graphql
+// const apiUri = 'http://localhost:3000/graphql'; // Local Test
 
 // GET (One product)
 function getProduct() {
