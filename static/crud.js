@@ -68,11 +68,11 @@ function postProduct(e) {
         .then((result) => {
             console.log(result);
             alert(`Added successfully at id ${result.data.data.addProduct}`);
+            getAllProducts();
         })
         .catch((err) => {
             console.log(err);
-        })
-        .then(getAllProducts());
+        });
 }
 
 // DELETE
@@ -85,11 +85,11 @@ function deleteProduct(e) {
         })
         .then((result) => {
             alert(`Deleted successfully at id ${result.data.data.deleteProduct}`);
+            getAllProducts();
         })
         .catch((err) => {
             console.log(err);
-        })
-        .then(getAllProducts());
+        });
 }
 
 // UPDATE
@@ -111,11 +111,11 @@ function updateProduct(e) {
         })
         .then((result) => {
             alert(`Updated successfully at id ${result.data.data.updateProduct}`);
+            getAllProducts();
         })
         .catch((err) => {
             console.log(err);
-        })
-        .then(getAllProducts());
+        });
 }
 
 // SEARCH(GET)
