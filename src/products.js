@@ -1,3 +1,6 @@
+// IT CAN BE REPLACED BY OTHER DATABASE
+// NOW, THIS IS SHARED DATA
+
 module.exports = [
     {
         id: 1,
