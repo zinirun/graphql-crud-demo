@@ -1,4 +1,4 @@
-const apiUri = 'https://graphql-crud-demo.netlify.app/graphql'; // Source URL/graphql
+const apiUri = 'https://gql-crud.herokuapp.com/graphql'; // Source URL/graphql
 
 // GET (One product)
 function getProduct() {
