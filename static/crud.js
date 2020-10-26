@@ -1,4 +1,4 @@
-const apiUri = 'http://localhost:3000/graphql'; // Source URL/graphql
+const apiUri = 'https://zinirun.github.io/graphql-crud-demo/graphql'; // Source URL/graphql
 
 // GET (One product)
 function getProduct() {
