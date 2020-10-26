@@ -41,7 +41,7 @@ mutation deleteProduct{
 
 ### Also supports
 - Get all items
-- Debouncing Search ()
+- Debouncing Search (customized timer)
 - Set data-set default
 
 ## Structure
