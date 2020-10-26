@@ -30,8 +30,23 @@
             .wrapper > iframe.open {
                 display: block;
             }
-            .content > a {
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+            a:hover {
+                color: #ff44c4;
+            }
+            .content > a,
+            .content > span {
+                font-weight: bold;
+                font-size: 1rem;
                 float: right;
+                margin-left: 5px;
+            }
+            .content > span {
+                color: #aaa;
+                user-select: none;
             }
             h2 > button {
                 margin-left: 10px;
@@ -127,12 +142,13 @@
         <div class="wrapper">
             <div class="content">
                 <h2 style="font-family: 'Rubik', 'Helvetica', sans-serif; color: #e10098">
-                    GraphQL CRUD Example
+                    <a href="/">GraphQL CRUD Example</a>
                     <img src="https://graphql.org/img/logo.svg" width="40px" />
                 </h2>
                 <hr style="border-color: #e10098" />
                 <h4>
-                    All Products <button id="set">Set Default</button>
+                    All Products <button id="set">Set Default Data</button>
+                    <button id="ref">Force Refresh</button>
                     <span id="updated">Updated!</span>
                 </h4>
                 <ul id="allProducts"></ul>
@@ -207,12 +223,15 @@
                 <ul id="results"></ul>
                 <hr />
                 <button id="openIframe">Open GraphiQL</button>
-                <a href="https://github.com/zinirun/graphql-crud-demo" target="_blank"
-                    ><img
+                <span>MIT</span>
+                <a href="https://github.com/zinirun/graphql-crud-demo" target="_blank">
+                    <img
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Font_Awesome_5_brands_github.svg/232px-Font_Awesome_5_brands_github.svg.png"
-                        width="24px"
+                        width="20px"
                 /></a>
+                <a href="https://www.zini.run" target="_blank">zini</a>
             </div>
+            <!--GraphiQL Iframe-->
             <iframe src="/graphql" width="800px;"></iframe>
         </div>
 

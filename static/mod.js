@@ -35,3 +35,6 @@ searchName.addEventListener('keyup', (e) => {
 // INIT DATA
 const set = document.querySelector('#set');
 set.addEventListener('click', initProduct);
+
+// FORCE REFRESH
+document.querySelector('#ref').addEventListener('click', getAllProducts);
