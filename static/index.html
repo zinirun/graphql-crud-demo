@@ -13,7 +13,8 @@
                 font-family: 'Roboto', 'Helvetica', sans-serif;
             }
             body {
-                padding: 0 3%;
+                padding: 10px 3.5%;
+                margin: 0;
             }
             h2 > img {
                 float: right;
@@ -46,10 +47,8 @@
             input:hover {
                 border-color: #e10098;
             }
-            input:focus {
-                border-color: #e10098;
-            }
             button {
+                outline: none;
                 background-color: #e10098;
                 color: white;
                 border: none;
@@ -72,10 +71,20 @@
                 animation: updatedGlitter 0.7s ease-out both;
                 -webkit-animation: updatedGlitter 0.7s ease-out both;
             }
-            @-webkit-keyframes updatedGlitter {
+            @keyframes updatedGlitter {
                 50% {
                     opacity: 1;
                 }
+            }
+            .flex {
+                display: flex;
+                align-items: center;
+            }
+            .flex > span {
+                width: 5.5rem;
+            }
+            .flex > button {
+                margin-left: 5px;
             }
         </style>
     </head>
@@ -85,33 +94,49 @@
             <img src="https://graphql.org/img/logo.svg" width="40px" />
         </h2>
         <hr style="border-color: #e10098" />
-        <h3>All Products <span id="updated">Updated!</span></h3>
+        <h4>All Products <span id="updated">Updated!</span></h4>
         <ul id="allProducts"></ul>
         <hr />
         <!--GET-->
         <div>
-            <h3>GET & UPDATE</h3>
-            Product Id <input id="pid" /> <button id="get">GET</button>
+            <h4>GET & UPDATE</h4>
+            <div class="flex">
+                <span>Product Id</span><input id="pid" /> <button id="get">GET</button>
+            </div>
         </div>
         <div id="result" style="display: none">
             <h4>Result</h4>
-            <p>price <input id="price" /></p>
-            <p>name <input id="name" /></p>
-            <p>description <input id="description" /></p>
+            <p class="flex"><span>price</span><input id="price" /></p>
+            <p class="flex"><span>name</span><input id="name" /></p>
+            <p class="flex"><span>description</span><input id="description" /></p>
+            <!--UPDATE-->
             <button id="update">UPDATE</button>
         </div>
         <hr />
         <!--POST-->
         <div>
-            <h3>POST</h3>
+            <h4>POST</h4>
         </div>
-        <div>
-            <p>price <input id="priceInput" /></p>
-            <p>name <input id="nameInput" /></p>
-            <p>description <input id="descriptionInput" /></p>
+        <form>
+            <p class="flex"><span>price</span><input name="price" required /></p>
+            <p class="flex"><span>name</span><input name="name" required /></p>
+            <p class="flex"><span>description</span><input name="description" required /></p>
             <button id="post">POST</button>
-        </div>
+        </form>
         <hr />
+        <!--GET(Debouncing)-->
+        <div>
+            <h4>
+                GET - Debouncing Search with
+                <input id="time" value="200" style="width: 2.7rem" /> ms
+            </h4>
+        </div>
+        <p class="flex">
+            <span>name</span><input id="searchName" /><button id="search">Search</button>
+        </p>
+        <ul id="results"></ul>
+        <hr />
+
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script>
             // GET (All products)
@@ -129,14 +154,45 @@
             getBt.addEventListener('click', getProduct);
 
             // POST
-            const priceInput = document.querySelector('#priceInput');
-            const nameInput = document.querySelector('#nameInput');
-            const descriptionInput = document.querySelector('#descriptionInput');
-            const postBt = document.querySelector('#post');
-            postBt.addEventListener('click', postProduct);
+            const postForm = document.querySelector('form');
+            postForm.addEventListener('submit', postProduct);
 
             // UPDATE
             const updateBt = document.querySelector('#update');
+            updateBt.addEventListener('click', updateProduct);
+
+            // SEARCH(GET)
+            const results = document.querySelector('#results');
+            const searchName = document.querySelector('#searchName');
+            const debouncingTime = document.querySelector('#time');
+            let timer;
+            searchName.addEventListener('keyup', (e) => {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(() => {
+                    searchProducts(e.target.value.toLowerCase());
+                }, debouncingTime.value);
+            });
+
+            function searchProducts(value) {
+                axios
+                    .get('http://localhost:3000/graphql', {
+                        params: {
+                            query: `{searchProducts(name: "${value}") {id price name description}}`,
+                        },
+                    })
+                    .then((result) => result.data.data.searchProducts)
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                    .then((products) => {
+                        results.innerHTML = products
+                            .map(
+                                (p) =>
+                                    `<li><b>id</b>: ${p.id} <b>name</b>: ${p.name} <b>price</b>: ${p.price} <b>description</b>: ${p.description}`,
+                            )
+                            .join('');
+                    });
+            }
 
             // GET (One product)
             function getProduct() {
@@ -188,16 +244,17 @@
             }
 
             // POST
-            function postProduct() {
+            function postProduct(e) {
+                e.preventDefault();
                 axios
                     .post('http://localhost:3000/graphql', {
                         query:
                             'mutation addProduct($input: ProductInput) { addProduct(input: $input) { id } }',
                         variables: {
                             input: {
-                                price: parseInt(priceInput.value),
-                                name: String(nameInput.value),
-                                description: String(descriptionInput.value),
+                                price: parseInt(this.price.value),
+                                name: String(this.name.value),
+                                description: String(this.description.value),
                             },
                         },
                         operationName: null,
@@ -216,11 +273,37 @@
                 const id = parseInt(e.getAttribute('product-id'));
                 axios
                     .post('http://localhost:3000/graphql', {
-                        query: `mutation deleteProduct{ deleteProduct(id: ${id}) }`,
+                        query: `mutation deleteProduct{ deleteProduct(id: ${id})}`,
                         operationName: null,
                     })
                     .then((result) => {
                         alert(`Deleted successfully at id ${result.data.data.deleteProduct}`);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                    .then(getAllProducts());
+            }
+
+            // UPDATE
+            function updateProduct(e) {
+                const id = parseInt(e.target.getAttribute('product-id'));
+                axios
+                    .post('http://localhost:3000/graphql', {
+                        query:
+                            'mutation updateProduct($id: ID!, $input: ProductInput!) { updateProduct(id: $id, input: $input)}',
+                        variables: {
+                            id,
+                            input: {
+                                price: parseInt(price.value),
+                                name: String(name.value),
+                                description: String(description.value),
+                            },
+                        },
+                        operationName: null,
+                    })
+                    .then((result) => {
+                        alert(`Updated successfully at id ${result.data.data.updateProduct}`);
                     })
                     .catch((err) => {
                         console.log(err);
