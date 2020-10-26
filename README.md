@@ -1,5 +1,7 @@
 # graphql-crud-demo
 GraphQL CRUD Operations in Node.js, Axios, VanillaJS
+
+
 <img src="https://github.com/zinirun/graphql-crud-demo/blob/main/img/readme.png" alt="gql-crud-page-sample" />
 
 ## Start
